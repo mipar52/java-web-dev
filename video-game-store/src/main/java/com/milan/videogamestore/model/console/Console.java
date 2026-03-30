@@ -2,7 +2,6 @@ package com.milan.videogamestore.model.console;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Entity
 @Data

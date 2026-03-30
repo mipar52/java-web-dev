@@ -11,9 +11,8 @@ import com.milan.videogamestore.model.console.Console;
 import com.milan.videogamestore.model.review.Review;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "games")
+@Table(name = "game")
 @Entity
 @Data
 public class Game {

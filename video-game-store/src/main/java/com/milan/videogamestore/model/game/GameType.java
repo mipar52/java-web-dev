@@ -6,9 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.Data;
 import jakarta.persistence.*;
-import org.springframework.data.relational.core.mapping.Table;
 
-@Table("game_type")
+@Table(name = "game_type")
 @Entity
 @Data
 public class GameType {
