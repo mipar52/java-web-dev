@@ -48,10 +48,15 @@ public class CartController {
     public String addItem(
             @RequestParam Long gameId,
             @RequestParam(defaultValue = "1") int quantity,
+            @RequestParam(required = false) String returnUrl,
             @ModelAttribute("cart") Cart cart
     ) {
         cart.add(gameId, quantity);
-        return "redirect:/cart";
+
+        if (returnUrl != null && !returnUrl.isBlank() && returnUrl.startsWith("/")) {
+            return "redirect:" + returnUrl;
+        }
+        return "redirect:/games";
     }
 
     @PostMapping("/items/{gameId}")

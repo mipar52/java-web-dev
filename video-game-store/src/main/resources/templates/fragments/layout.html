@@ -21,7 +21,9 @@
     <div class="ms-auto d-flex gap-2">
       <a class="btn btn-sm ds-btn" th:href="@{/games}">Games</a>
       <a class="btn btn-sm ds-btn" th:href="@{/genres}">Categories</a>
-      <a class="btn btn-sm ds-btn" th:href="@{/cart}">Cart</a>
+      <a class="btn btn-sm ds-btn" th:href="@{/cart}">
+        Cart <span th:if="${cartItemCount > 0}" th:text="'(' + ${cartItemCount} + ')'">(0)</span>
+      </a>
     </div>
   </div>
 </nav>

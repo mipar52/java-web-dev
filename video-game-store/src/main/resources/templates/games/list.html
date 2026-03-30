@@ -82,7 +82,7 @@
                 </div>
                 <form th:action="@{/cart/items}" method="post" class="d-flex gap-2">
                     <input type="hidden" name="gameId" th:value="${g.id}"/>
-                    <input class="form-control form-control-sm" type="number" name="quantity" value="1" min="1" style="max-width: 90px;"/>
+                    <input type="hidden" name="returnUrl" th:value="${currentPath}"/>
                     <button class="btn btn-sm ds-btn" type="submit">Add</button>
                 </form>
             </div>

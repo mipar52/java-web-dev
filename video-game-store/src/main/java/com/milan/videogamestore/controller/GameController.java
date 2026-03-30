@@ -2,6 +2,7 @@ package com.milan.videogamestore.controller;
 
 import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.repository.GameRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +24,11 @@ public class GameController {
     }
 
     @GetMapping("/{id}")
-    public String gameDetails(@PathVariable Long id, Model model) {
+    public String gameDetails(@PathVariable Long id, HttpServletRequest request, Model model) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found: " + id));
         model.addAttribute("game", game);
+        model.addAttribute("currentPat", request.getRequestURI());
         return "games/details";
     }
 }
