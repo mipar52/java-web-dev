@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-between align-items-end mb-3">
         <div>
             <h1 class="ds-title mb-1">Checkout</h1>
-            <div class="ds-muted">Cash on Delivery (COD). Pay when it arrives.</div>
+            <div class="ds-muted">Complete your order (COD).</div>
         </div>
         <a class="btn ds-btn" th:href="@{/cart}">&larr; Back to cart</a>
     </div>
@@ -49,8 +49,16 @@
                         <div class="ds-title" style="font-size:1rem;" th:text="${paymentMethod}">COD</div>
                     </div>
 
-                    <div class="d-flex justify-content-end">
-                        <button class="btn ds-btn" type="submit">Place order</button>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button class="btn ds-btn" type="submit"
+                                formaction="/checkout" formmethod="post">
+                            Place order (COD)
+                        </button>
+
+                        <button class="btn ds-btn" type="submit"
+                                formaction="/checkout/paypal/start" formmethod="post">
+                            Pay with PayPal
+                        </button>
                     </div>
                 </form>
             </div>

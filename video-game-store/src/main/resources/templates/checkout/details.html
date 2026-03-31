@@ -10,7 +10,8 @@
       <div>
         <h1 class="ds-title mb-1">Order #<span th:text="${order.id}">1</span></h1>
         <div class="ds-muted">
-          Status: <span th:text="${order.status}">CREATED</span> • Payment: <span th:text="${order.paymentMethod}">COD</span>
+          Status: <span th:text="${order.status}">CREATED</span>
+          • Payment: <span th:text="${order.paymentMethod}">COD</span>
         </div>
       </div>
       <a class="btn ds-btn" th:href="@{/games}">Back to games</a>
@@ -28,6 +29,7 @@
 
       <div class="col-12 col-lg-6">
         <div class="ds-muted small mb-1">Items</div>
+
         <div class="ds-card p-3 mb-2" style="background: rgba(255,255,255,.02);" th:each="it : ${order.items}">
           <div class="d-flex justify-content-between">
             <div>
