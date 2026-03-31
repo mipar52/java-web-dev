@@ -4,7 +4,7 @@ import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.model.users.AppUser;
 import lombok.Data;
 import jakarta.persistence.*;
-import org.springframework.data.relational.core.mapping.Table;
+import java.time.OffsetDateTime;
 
 @Table(name = "reviews")
 @Entity
@@ -23,4 +23,10 @@ public class Review {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser user;
+
+    @Column
+    private Integer rating;
+
+    @Column(nullable = false)
+    private OffsetDateTime createdAt = OffsetDateTime.now();
 }

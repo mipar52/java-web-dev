@@ -44,6 +44,17 @@ public class CartController {
         return "cart/view";
     }
 
+    @PostMapping("/add")
+    public String addToCart(@RequestParam("gameId") Long gameId,
+                            @RequestParam(value= "qty", defaultValue = "1") int qty,
+                            @ModelAttribute("cart") Cart cart) {
+        if (qty < 1) qty = 1;
+
+        gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found: " + gameId));
+        cart.add(gameId, qty);
+        return "redirect:/games/" + gameId + "?added=1";
+    }
+
     @PostMapping("/items")
     public String addItem(
             @RequestParam Long gameId,

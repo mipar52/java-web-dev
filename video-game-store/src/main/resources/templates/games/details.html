@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/layout :: head(${game.name})}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: nav}"></nav>
@@ -89,10 +89,23 @@
           <a th:href="${game.gameUrl}" target="_blank" rel="noreferrer">Official link</a>
         </div>
 
-        <!-- Action placeholder (cart later) -->
-        <div class="mt-3 d-flex gap-2">
-          <button class="btn ds-btn" type="button" disabled>Add to cart (soon)</button>
-          <button class="btn ds-btn" type="button" disabled>Add review (login required)</button>
+        <!-- Actions -->
+        <form th:action="@{/cart/add}" method="post" class="d-flex gap-2 align-items-center">
+          <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <input type="hidden" name="gameId" th:value="${game.id}"/>
+
+          <input class="form-control" style="width: 90px;" type="number" name="qty" min="1" value="1"/>
+
+          <button class="btn ds-btn" type="submit">Add to cart</button>
+        </form>
+
+          <a class="btn ds-btn" href="#reviews" sec:authorize="isAuthenticated()">
+            Add / edit my review
+          </a>
+
+          <span class="ds-muted small" sec:authorize="isAnonymous()">
+    <a th:href="@{/login}">Log in</a> to leave a review.
+  </span>
         </div>
 
       </div>
@@ -103,26 +116,95 @@
   <div class="ds-card p-3 p-lg-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h2 class="ds-title mb-0" style="font-size: 1.1rem;">Bonfire Notes (Reviews)</h2>
-      <span class="ds-badge" th:text="${game.reviews != null ? game.reviews.size() : 0} + ' total'">0 total</span>
+      <span class="ds-badge" th:text="${reviews != null ? reviews.size() : 0} + ' total'">0 total</span>
     </div>
 
     <div class="ds-divider"></div>
 
-    <!-- If you don't have thymeleaf-extras-springsecurity, keep this as plain text for now -->
-    <div class="alert" style="background: rgba(214,162,77,.08); border: 1px solid rgba(214,162,77,.18); color: var(--text);"
-         th:if="${#authentication == null || !#authorization.expression('isAuthenticated()')}">
-      You must be logged in to leave a review.
+    <div id="reviews" class="ds-divider"></div>
+    <h2 class="ds-title mt-3">Reviews</h2>
+    <div class="ds-muted small mb-3" sec:authorize="isAnonymous()">
+      <a th:href="@{/login}">Log in</a> to write a review.
     </div>
+    <div class="ds-card p-3 mb-3" sec:authorize="isAuthenticated()">
+      <form th:action="@{/games/{id}/reviews(id=${game.id})}" method="post" th:object="${reviewForm}">
+        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-    <div th:if="${game.reviews != null && !game.reviews.isEmpty()}">
-      <div class="ds-card p-3 mb-2" style="background: rgba(255,255,255,.02);"
-           th:each="r : ${game.reviews}">
-        <div th:text="${r.comment}">Comment</div>
+        <div class="mb-2">
+          <label class="form-label ds-muted">Comment</label>
+          <textarea class="form-control" rows="4" th:field="*{comment}" required></textarea>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label ds-muted d-block">Rating</label>
+
+          <div class="star-rating">
+            <input th:field="*{rating}" type="radio" id="rating5" value="5"/>
+            <label for="rating5" title="5 stars">★</label>
+
+            <input th:field="*{rating}" type="radio" id="rating4" value="4"/>
+            <label for="rating4" title="4 stars">★</label>
+
+            <input th:field="*{rating}" type="radio" id="rating3" value="3"/>
+            <label for="rating3" title="3 stars">★</label>
+
+            <input th:field="*{rating}" type="radio" id="rating2" value="2"/>
+            <label for="rating2" title="2 stars">★</label>
+
+            <input th:field="*{rating}" type="radio" id="rating1" value="1"/>
+            <label for="rating1" title="1 star">★</label>
+          </div>
+
+          <div class="ds-muted small mt-1">Click a star (1–5)</div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn ds-btn" type="submit">Save review</button>
+
+          <button class="btn ds-btn" type="submit"
+                  formaction="/games/[[${game.id}]]/reviews/delete" formmethod="post">
+            Delete my review
+          </button>
+        </div>
+      </form>
+      <div class="col-12 col-md-6">
+        <div class="ds-card p-3" style="background: rgba(255,255,255,.02);">
+          <div class="ds-muted small">Reviews</div>
+          <div class="fs-5" th:text="${reviews != null ? reviews.size() : 0}">0</div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="ds-card p-3" style="background: rgba(255,255,255,.02);">
+          <div class="ds-muted small">Average rating</div>
+          <div class="fs-5">
+      <span th:if="${averageRating != null}"
+            th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+            <span th:if="${averageRating == null}">-</span>
+            <span class="ds-muted small" th:if="${ratingsCount != null}">
+        (<span th:text="${ratingsCount}">0</span>)
+      </span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="ds-muted" th:if="${game.reviews == null || game.reviews.isEmpty()}">
-      No notes have been left at this bonfire yet.
+    <div class="ds-card p-3 mb-2" th:if="${reviews == null || reviews.isEmpty()}">
+      <div class="ds-muted">No reviews yet.</div>
+    </div>
+
+    <div class="ds-card p-3 mb-2" th:each="r : ${reviews}">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="ds-title" style="font-size:1rem;" th:text="${r.user.username}">user</div>
+          <div class="ds-muted small">
+            <span th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}">date</span>
+            <span th:if="${r.rating != null}"> • Rating: <span th:text="${r.rating}">5</span>/5</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2" th:text="${r.comment}">comment</div>
     </div>
   </div>
 
