@@ -5,10 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
 import jakarta.persistence.*;
 
-@Table("genre")
+@Table(name = "genre")
 @Entity
 @Data
 public class Genre {

@@ -1,0 +1,131 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${game.name})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+
+  <a th:href="@{/games}" class="btn btn-sm ds-btn mb-3">&larr; Back to catalogue</a>
+
+  <!-- HERO -->
+  <div class="ds-card p-3 p-lg-4 mb-4">
+    <div class="row g-3 align-items-start">
+      <div class="col-12 col-lg-5">
+        <div class="ds-thumb" style="height: 320px;">
+          <img th:if="${game.imageUrl != null && !#strings.isEmpty(game.imageUrl)}"
+               th:src="${game.imageUrl}"
+               alt="cover"/>
+          <div th:if="${game.imageUrl == null || #strings.isEmpty(game.imageUrl)}"
+               class="h-100 d-flex align-items-center justify-content-center ds-muted">
+            No cover
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-7">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-3">
+            <h1 class="ds-title mb-1" th:text="${game.name}">Game</h1>
+            <div class="ds-muted">
+              <span th:if="${game.gameType != null}">
+                Type: <span th:text="${game.gameType.name}">singleplayer</span>
+              </span>
+              <span th:if="${game.releaseDate != null}">
+                <span th:if="${game.gameType != null}"> • </span>
+                Released: <span th:text="${#temporals.format(game.releaseDate, 'yyyy-MM-dd')}">2026-01-01</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <div class="fs-3 ds-price" th:text="${game.price} + ' €'">59.99 €</div>
+            <span class="ds-badge" th:if="${game.wonGameOfTheYearAward}">GOTY</span>
+          </div>
+        </div>
+
+        <div class="ds-divider"></div>
+
+        <!-- Description -->
+        <p class="mb-3" th:if="${game.description != null}" th:text="${game.description}">
+          Description...
+        </p>
+        <p class="ds-muted mb-3" th:if="${game.description == null}">
+          No description yet.
+        </p>
+
+        <!-- Stats -->
+        <div class="row g-2 mb-3">
+          <div class="col-12 col-md-6">
+            <div class="ds-card p-3" style="background: rgba(255,255,255,.02);">
+              <div class="ds-muted small">Metacritic</div>
+              <div class="fs-5" th:text="${game.metacriticScore != null ? game.metacriticScore : '-'}">-</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="ds-card p-3" style="background: rgba(255,255,255,.02);">
+              <div class="ds-muted small">Reviews</div>
+              <div class="fs-5" th:text="${game.reviews != null ? game.reviews.size() : 0}">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="mb-3">
+          <div class="ds-muted small mb-1">Categories</div>
+          <span class="ds-chip" th:each="cat : ${game.gameGenres}" th:text="${cat.name}">action</span>
+          <span class="ds-muted small" th:if="${game.gameGenres == null || game.gameGenres.isEmpty()}">No categories.</span>
+        </div>
+
+        <!-- Platforms -->
+        <div class="mb-3">
+          <div class="ds-muted small mb-1">Platforms</div>
+          <span class="ds-chip" th:each="c : ${game.consoles}" th:text="${c.name}">PC</span>
+          <span class="ds-muted small" th:if="${game.consoles == null || game.consoles.isEmpty()}">No platforms.</span>
+        </div>
+
+        <!-- Link -->
+        <div class="mb-0" th:if="${game.gameUrl != null && !#strings.isEmpty(game.gameUrl)}">
+          <a th:href="${game.gameUrl}" target="_blank" rel="noreferrer">Official link</a>
+        </div>
+
+        <!-- Action placeholder (cart later) -->
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn ds-btn" type="button" disabled>Add to cart (soon)</button>
+          <button class="btn ds-btn" type="button" disabled>Add review (login required)</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS -->
+  <div class="ds-card p-3 p-lg-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h2 class="ds-title mb-0" style="font-size: 1.1rem;">Bonfire Notes (Reviews)</h2>
+      <span class="ds-badge" th:text="${game.reviews != null ? game.reviews.size() : 0} + ' total'">0 total</span>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- If you don't have thymeleaf-extras-springsecurity, keep this as plain text for now -->
+    <div class="alert" style="background: rgba(214,162,77,.08); border: 1px solid rgba(214,162,77,.18); color: var(--text);"
+         th:if="${#authentication == null || !#authorization.expression('isAuthenticated()')}">
+      You must be logged in to leave a review.
+    </div>
+
+    <div th:if="${game.reviews != null && !game.reviews.isEmpty()}">
+      <div class="ds-card p-3 mb-2" style="background: rgba(255,255,255,.02);"
+           th:each="r : ${game.reviews}">
+        <div th:text="${r.comment}">Comment</div>
+      </div>
+    </div>
+
+    <div class="ds-muted" th:if="${game.reviews == null || game.reviews.isEmpty()}">
+      No notes have been left at this bonfire yet.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
