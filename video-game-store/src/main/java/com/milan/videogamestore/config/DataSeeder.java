@@ -4,10 +4,8 @@ import com.milan.videogamestore.model.console.Console;
 import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.model.game.GameType;
 import com.milan.videogamestore.model.game.Genre;
-import com.milan.videogamestore.repository.ConsoleRepository;
-import com.milan.videogamestore.repository.GameRepository;
-import com.milan.videogamestore.repository.GameTypeRepository;
-import com.milan.videogamestore.repository.GenreRepository;
+import com.milan.videogamestore.model.users.UserRole;
+import com.milan.videogamestore.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +23,19 @@ public class DataSeeder {
             GameRepository gameRepository,
             GameTypeRepository gameTypeRepository,
             GenreRepository genreRepository,
-            ConsoleRepository consoleRepository
+            ConsoleRepository consoleRepository,
+            UserRoleRepository roleRepo
     ) {
         return args -> {
             if (gameRepository.count() > 0) {
                 return;
             }
+
+            UserRole userRole = roleRepo.findByName("USER")
+                    .orElseGet(() -> roleRepo.save(new UserRole("USER")));
+
+            UserRole adminRole = roleRepo.findByName("ADMIN")
+                    .orElseGet(() -> roleRepo.save(new UserRole("ADMIN")));
 
             GameType single = new GameType();
             single.setName("singleplayer");
