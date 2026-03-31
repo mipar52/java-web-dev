@@ -1,7 +1,9 @@
 package com.milan.videogamestore.controller;
 
+import com.milan.videogamestore.model.dto.ReviewForm;
 import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.repository.GameRepository;
+import com.milan.videogamestore.repository.GameReviewRepository;
 import com.milan.videogamestore.repository.GenreRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class GameController {
 
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
+    private final GameReviewRepository reviewRepository;
 
     @GetMapping
     public String listGames(@RequestParam(name = "genreId", required = false) List<Long> genreIds, HttpServletRequest request, Model model) {
@@ -50,8 +53,19 @@ public class GameController {
     public String gameDetails(@PathVariable Long id, HttpServletRequest request, Model model) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found: " + id));
+        var reviews = reviewRepository.findAllByGame_IdOrderByCreatedAtDesc(id);
+        model.addAttribute("reviews", reviews);
+
+        var avg = reviewRepository.findAverageRatingByGameId(id).orElse(null);
+        var ratingsCount = reviewRepository.countRatingsByGameId(id);
+
+        model.addAttribute("averageRating", avg);
+        model.addAttribute("ratingsCount", ratingsCount);
+
         model.addAttribute("game", game);
+        model.addAttribute("reviews", reviews);
         model.addAttribute("currentPat", request.getRequestURI());
+        model.addAttribute("reviewForm", new ReviewForm());
         return "games/details";
     }
 
