@@ -25,7 +25,8 @@ public class Order {
     private OrderStatus status;
 
     @Column(nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(nullable = false)
     private String shippingAddress;
@@ -44,4 +45,10 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
+
+
+    // paypal dodatak
+    private String externalPaymentId;
+
+    private OffsetDateTime paidAt;
 }
