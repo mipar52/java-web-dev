@@ -1,0 +1,85 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Checkout')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+            <h1 class="ds-title mb-1">Checkout</h1>
+            <div class="ds-muted">Cash on Delivery (COD). Pay when it arrives.</div>
+        </div>
+        <a class="btn ds-btn" th:href="@{/cart}">&larr; Back to cart</a>
+    </div>
+
+    <div class="row g-3">
+        <!-- FORM -->
+        <div class="col-12 col-lg-7">
+            <div class="ds-card p-3 p-lg-4">
+                <div class="ds-title mb-2" style="font-size: 1.05rem;">Shipping details</div>
+                <div class="ds-divider"></div>
+
+                <form th:action="@{/checkout}" method="post" th:object="${form}">
+                    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                    <div class="mb-3">
+                        <label class="form-label ds-muted" for="shippingAddress">Address</label>
+                        <input class="form-control" id="shippingAddress" th:field="*{shippingAddress}" required/>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label ds-muted" for="city">City</label>
+                            <input class="form-control" id="city" th:field="*{city}" required/>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label ds-muted" for="zip">ZIP</label>
+                            <input class="form-control" id="zip" th:field="*{zip}" required/>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 mb-3">
+                        <label class="form-label ds-muted" for="phone">Phone</label>
+                        <input class="form-control" id="phone" th:field="*{phone}" required/>
+                    </div>
+
+                    <div class="ds-card p-3 mb-3" style="background: rgba(255,255,255,.02);">
+                        <div class="ds-muted small">Payment method</div>
+                        <div class="ds-title" style="font-size:1rem;" th:text="${paymentMethod}">COD</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn ds-btn" type="submit">Place order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="col-12 col-lg-5">
+            <div class="ds-card p-3 p-lg-4">
+                <div class="ds-title mb-2" style="font-size: 1.05rem;">Order summary</div>
+                <div class="ds-divider"></div>
+
+                <div class="d-flex justify-content-between mb-2" th:each="it : ${items}">
+                    <div>
+                        <div th:text="${it.name}">Game</div>
+                        <div class="ds-muted small">x<span th:text="${it.quantity}">1</span> @ <span th:text="${it.unitPrice} + ' €'">0</span></div>
+                    </div>
+                    <div class="ds-price" th:text="${it.lineTotal} + ' €'">0</div>
+                </div>
+
+                <div class="ds-divider"></div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="ds-muted">Total</div>
+                    <div class="fs-4 ds-price" th:text="${total} + ' €'">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
