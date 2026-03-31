@@ -6,6 +6,7 @@ import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.model.orders.Order;
 import com.milan.videogamestore.model.orders.OrderItem;
 import com.milan.videogamestore.model.orders.OrderStatus;
+import com.milan.videogamestore.model.orders.PaymentMethod;
 import com.milan.videogamestore.repository.AppUserRepository;
 import com.milan.videogamestore.repository.GameRepository;
 import com.milan.videogamestore.repository.OrderRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class CheckoutController {
         model.addAttribute("items", summary.items());
         model.addAttribute("total", summary.total());
         model.addAttribute("form", new CheckoutForm());
-        model.addAttribute("paymentMethod", "COD");
+        model.addAttribute("paymentMethod", PaymentMethod.COD);
 
         return "checkout/view";
     }
@@ -51,7 +53,7 @@ public class CheckoutController {
         order.setUser(user);
 
         order.setStatus(OrderStatus.CREATED);
-        order.setPaymentMethod("COD");
+        order.setPaymentMethod(PaymentMethod.COD);
         order.setShippingAddress(form.getShippingAddress());
         order.setCity(form.getCity());
         order.setZip(form.getZip());
@@ -91,6 +93,13 @@ public class CheckoutController {
         model.addAttribute("tota", total);
         return "order/details";
     }
+
+//    @GetMapping("/orders")
+//    public String myOrders(Authentication authentication, Model model) {
+//        List<Order> orders = orderRepository.findAllByUser_UsernameOrderByCreatedAtDesc(authentication.getName());
+//        model.addAttribute("orders", orders);
+//        return "orders/list";
+//    }
 
     private Summary buildSummary(Cart cart) {
         var items = new ArrayList<CartLine>();

@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My orders')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4" style="max-width: 980px;">
+  <div class="d-flex justify-content-between align-items-end mb-3">
+    <div>
+      <h1 class="ds-title mb-1">My orders</h1>
+      <div class="ds-muted">Your recent journeys.</div>
+    </div>
+    <a class="btn ds-btn" th:href="@{/games}">Continue shopping</a>
+  </div>
+
+  <div class="ds-card p-3 p-lg-4" th:if="${orders != null && !orders.isEmpty()}">
+    <div class="ds-divider"></div>
+
+    <div th:each="o : ${orders}">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <div class="ds-title" style="font-size:1.05rem;">
+            Order #<span th:text="${o.id}">1</span>
+          </div>
+          <div class="ds-muted small">
+            Status: <span th:text="${o.status}">CREATED</span>
+            • Payment: <span th:text="${o.paymentMethod}">COD</span>
+          </div>
+
+          <div class="ds-muted small mt-1">
+            Items: <span th:text="${#lists.size(o.items)}">0</span>
+            <!-- ako želiš ukupan qty umjesto count stavki, reci pa promijenimo -->
+          </div>
+        </div>
+
+        <div class="text-end">
+          <div class="ds-muted small">Total</div>
+          <div class="ds-price"
+               th:text="${#aggregates.sum(o.items.![lineTotal])} + ' €'">0 €</div>
+
+          <a class="btn btn-sm ds-btn mt-2" th:href="@{/orders/{id}(id=${o.id})}">View</a>
+        </div>
+      </div>
+
+      <div class="ds-divider"></div>
+    </div>
+  </div>
+
+  <div class="ds-card p-3 p-lg-4" th:if="${orders == null || orders.isEmpty()}">
+    <div class="ds-muted">No orders yet.</div>
+    <div class="mt-3">
+      <a class="btn ds-btn" th:href="@{/games}">Browse games</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

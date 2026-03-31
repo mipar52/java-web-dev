@@ -35,6 +35,8 @@
         <span class="ds-badge" sec:authorize="hasRole('ADMIN')">ADMIN</span>
   </span>
 
+      <a class="btn btn-sm ds-btn" sec:authorize="isAuthenticated()" th:href="@{/orders}">My orders</a>
+
       <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
         <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button class="btn btn-sm ds-btn" type="submit">Logout</button>

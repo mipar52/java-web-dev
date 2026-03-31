@@ -1,0 +1,16 @@
+package com.milan.videogamestore.model.dto.paypal;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+@Data
+public class PayPalAccessTokenResponse {
+    @JsonProperty("access_token")
+    private String accessToken;
+
+    @JsonProperty("token_type")
+    private String tokenType;
+
+    @JsonProperty("expires_in")
+    private long expiresIn;
+}
