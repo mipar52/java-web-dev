@@ -1,15 +1,14 @@
 package com.milan.videogamestore.model.cart;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Getter
 public class Cart implements Serializable {
     private final Map<Long, Integer> quantities = new LinkedHashMap<>();
-
-    public Map<Long, Integer> getQuantities() {
-        return quantities;
-    }
 
     public void add(Long gameId, int qty) {
         if (qty <= 0) return;
