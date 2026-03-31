@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -24,6 +25,21 @@
       <a class="btn btn-sm ds-btn" th:href="@{/cart}">
         Cart <span th:if="${cartItemCount > 0}" th:text="'(' + ${cartItemCount} + ')'">(0)</span>
       </a>
+      <!-- Not logged in -->
+      <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
+      <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
+
+      <!-- Logged in -->
+      <span class="ds-muted small" sec:authorize="isAuthenticated()">
+    <span sec:authentication="name">user</span>
+        <span class="ds-badge" sec:authorize="hasRole('ADMIN')">ADMIN</span>
+  </span>
+
+      <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
+        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button class="btn btn-sm ds-btn" type="submit">Logout</button>
+      </form>
+    </div>
     </div>
   </div>
 </nav>
