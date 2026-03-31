@@ -159,3 +159,30 @@ a:hover{ color: #F1C66F; }
   margin-right: .35rem;
   margin-bottom: .35rem;
 }
+
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: rgba(255,255,255,.25);
+  user-select: none;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffc107;
+}
+
+.star-rating input:checked ~ label {
+  color: #ffc107;
+}
