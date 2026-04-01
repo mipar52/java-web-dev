@@ -37,4 +37,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
            where g.id in :ids
            """)
     List<Game> findAllByIdInWithGraph(@Param("ids") Collection<Long> ids);
+
+    @EntityGraph(attributePaths = {"gameType", "gameGenres", "consoles"})
+    @Query("""
+       select g
+       from Game g
+       where (:q is null or :q = '' or lower(g.name) like lower(concat('%', :q, '%')))
+       order by g.name asc
+       """)
+    List<Game> adminSearch(@Param("q") String q);
 }
