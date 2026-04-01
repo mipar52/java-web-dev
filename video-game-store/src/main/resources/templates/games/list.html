@@ -45,11 +45,18 @@
 
                 <!-- image -->
                 <div class="ds-thumb mb-3">
-                    <img th:if="${g.imageUrl != null && !#strings.isEmpty(g.imageUrl)}"
-                         th:src="${g.imageUrl}"
-                         alt="cover"/>
-                    <div th:if="${g.imageUrl == null || #strings.isEmpty(g.imageUrl)}"
-                         class="h-100 d-flex align-items-center justify-content-center ds-muted">
+                    <img th:if="${g.id != null}"
+                         th:attr="data-fallback=${g.imageUrl}"
+                         th:src="@{'/media/db-covers/' + ${g.id}}"
+                         alt="cover"
+                         onerror="
+         const fb = this.getAttribute('data-fallback');
+         if (fb && fb.trim().length > 0 && this.src !== fb) { this.src = fb; }
+         else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }
+       "/>
+
+                    <div class="h-100 d-flex align-items-center justify-content-center ds-muted"
+                         style="display:none;">
                         No cover
                     </div>
                 </div>
