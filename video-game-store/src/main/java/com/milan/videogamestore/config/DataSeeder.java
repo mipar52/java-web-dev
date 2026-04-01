@@ -4,12 +4,18 @@ import com.milan.videogamestore.model.console.Console;
 import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.model.game.GameType;
 import com.milan.videogamestore.model.game.Genre;
+import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.model.users.UserRole;
 import com.milan.videogamestore.repository.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -24,7 +30,9 @@ public class DataSeeder {
             GameTypeRepository gameTypeRepository,
             GenreRepository genreRepository,
             ConsoleRepository consoleRepository,
-            UserRoleRepository roleRepo
+            UserRoleRepository roleRepo,
+            AppUserRepository appUserRepository,
+            PasswordEncoder passwordEncoder
     ) {
         return args -> {
             if (gameRepository.count() > 0) {
@@ -37,6 +45,17 @@ public class DataSeeder {
             UserRole adminRole = roleRepo.findByName("ADMIN")
                     .orElseGet(() -> roleRepo.save(new UserRole("ADMIN")));
 
+            AppUser user = new AppUser();
+            user.setFirstName("Adminka");
+            user.setLastName("Adminkic");
+            user.setEmail("admin@gmail.com");
+            user.setUsername("admin");
+            user.setPasswordHash(passwordEncoder.encode("admin"));
+            user.setMobilePhone("0919284901");
+            user.setRole(adminRole);
+
+            AppUser newUser = appUserRepository.save(user);
+            System.out.println("Added new user: " + newUser);
             GameType single = new GameType();
             single.setName("singleplayer");
             single = gameTypeRepository.save(single);
