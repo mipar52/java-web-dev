@@ -1,0 +1,68 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+  <h1 class="ds-title mb-3">Admin dashboard</h1>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Products</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Games</h2>
+        <div class="ds-muted mb-3">Create, edit, delete games and manage their metadata.</div>
+        <a class="btn ds-btn" th:href="@{/admin/games}">Open</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Sales</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Orders</h2>
+        <div class="ds-muted mb-3">Browse all purchases and update order status/shipping.</div>
+        <a class="btn ds-btn" th:href="@{/admin/orders}">Open</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Reference data</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Game types</h2>
+        <div class="ds-muted mb-3">Manage game type list.</div>
+        <a class="btn ds-btn" th:href="@{/admin/game-types}">Open</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Reference data</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Genres</h2>
+        <div class="ds-muted mb-3">Manage genre list.</div>
+        <a class="btn ds-btn" th:href="@{/admin/genres}">Open</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Reference data</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Consoles</h2>
+        <div class="ds-muted mb-3">Manage supported consoles.</div>
+        <a class="btn ds-btn" th:href="@{/admin/consoles}">Open</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="ds-card p-3 p-lg-4 h-100">
+        <div class="ds-muted small">Security</div>
+        <h2 class="ds-title mt-1" style="font-size: 1.1rem;">Login audit</h2>
+        <div class="ds-muted mb-3">See who logged in, when, and from which IP address.</div>
+        <a class="btn ds-btn" th:href="@{/admin/audit/logins}">Open</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
