@@ -186,3 +186,23 @@ a:hover{ color: #F1C66F; }
 .star-rating input:checked ~ label {
   color: #ffc107;
 }
+
+.ds-userpill{
+  display: inline-flex;
+  align-items: center;
+  padding: .28rem .6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+}
+
+.ds-userpill-name{
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.ds-btn-logout{
+  border-color: rgba(214,162,77,.55);
+  background: rgba(214,162,77,.14);
+}

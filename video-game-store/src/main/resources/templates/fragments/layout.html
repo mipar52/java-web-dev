@@ -15,37 +15,52 @@
 </head>
 
 <body>
-<nav th:fragment="nav" class="navbar navbar-expand-lg ds-navbar">
-  <div class="container py-2">
-    <a class="navbar-brand ds-title ds-brand" th:href="@{/games}">Video Game Store</a>
+  <nav th:fragment="nav" class="navbar navbar-expand-lg ds-navbar">
+    <div class="container py-2">
+      <a class="navbar-brand ds-title ds-brand" th:href="@{/games}">Video Game Store</a>
 
-    <div class="ms-auto d-flex gap-2">
-      <a class="btn btn-sm ds-btn" th:href="@{/games}">Games</a>
-      <a class="btn btn-sm ds-btn" th:href="@{/genres}">Categories</a>
-      <a class="btn btn-sm ds-btn" th:href="@{/cart}">
-        Cart <span th:if="${cartItemCount > 0}" th:text="'(' + ${cartItemCount} + ')'">(0)</span>
-      </a>
-      <!-- Not logged in -->
-      <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
-      <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dsNav"
+              aria-controls="dsNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-      <!-- Logged in -->
-      <span class="ds-muted small" sec:authorize="isAuthenticated()">
-    <span sec:authentication="name">user</span>
-        <span class="ds-badge" sec:authorize="hasRole('ADMIN')">ADMIN</span>
-  </span>
+      <div class="collapse navbar-collapse" id="dsNav">
+        <!-- Left: main nav -->
+        <div class="navbar-nav gap-2">
+          <a class="btn btn-sm ds-btn" th:href="@{/games}">Games</a>
+          <a class="btn btn-sm ds-btn" th:href="@{/genres}">Categories</a>
+          <a class="btn btn-sm ds-btn" th:href="@{/cart}">
+            Cart <span th:if="${cartItemCount > 0}" th:text="'(' + ${cartItemCount} + ')'">(0)</span>
+          </a>
+        </div>
 
-      <a class="btn btn-sm ds-btn" sec:authorize="isAuthenticated()" th:href="@{/orders}">My orders</a>
+        <!-- Right: user/auth -->
+        <div class="ms-lg-auto mt-3 mt-lg-0 d-flex flex-wrap gap-2 align-items-center justify-content-lg-end">
 
-      <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
-        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button class="btn btn-sm ds-btn" type="submit">Logout</button>
-      </form>
+          <!-- Logged in: user pill -->
+          <div class="ds-userpill" sec:authorize="isAuthenticated()">
+            <span class="ds-userpill-name" sec:authentication="name">user</span>
+            <span class="ds-badge ms-2" sec:authorize="hasRole('ADMIN')">ADMIN</span>
+          </div>
+
+          <!-- Logged in links -->
+          <a class="btn btn-sm ds-btn" sec:authorize="isAuthenticated()" th:href="@{/orders}">My orders</a>
+          <a class="btn btn-sm ds-btn" sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Admin</a>
+
+          <!-- Not logged in -->
+          <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
+          <a class="btn btn-sm ds-btn" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
+
+          <!-- Logout pushed to the far right on large screens -->
+          <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0 ms-lg-2">
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button class="btn btn-sm ds-btn ds-btn-logout" type="submit">Logout</button>
+          </form>
+
+        </div>
+      </div>
     </div>
-    </div>
-  </div>
-</nav>
-
+  </nav>
 <div th:fragment="container(content)">
   <div class="container py-4" th:insert="${content}"></div>
 </div>

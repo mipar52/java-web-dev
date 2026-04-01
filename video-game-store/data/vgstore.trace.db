@@ -7286,3 +7286,15 @@ insert into orders (city,created_at,external_payment_id,paid_at,payment_method,p
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-03-31 21:29:41.447877+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "APP_USERS" not found; SQL statement:
+select * from app_users [42102-240]
+2026-03-31 21:34:16.461578+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * [*]app_user"; SQL statement:
+select * app_user [42000-240]
+2026-03-31 21:34:23.326364+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select from [*]* app_user"; expected "identifier"; SQL statement:
+select from * app_user [42001-240]
+2026-03-31 21:34:24.994166+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select from [*]* app_user"; expected "identifier"; SQL statement:
+select from * app_user [42001-240]

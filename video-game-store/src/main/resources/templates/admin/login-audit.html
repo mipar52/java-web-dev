@@ -1,0 +1,75 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Login audit')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="ds-title mb-0">Admin: Login audit</h1>
+    <a class="btn ds-btn" th:href="@{/admin}">Back to dashboard</a>
+  </div>
+
+  <form class="ds-card p-3 mb-3" method="get" th:action="@{/admin/audit/logins}">
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-md-3">
+        <label class="form-label ds-muted">Username</label>
+        <input class="form-control" name="username" th:value="${username}" placeholder="contains..."/>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label ds-muted">From</label>
+        <input class="form-control" type="date" name="from" th:value="${from}"/>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <label class="form-label ds-muted">To</label>
+        <input class="form-control" type="date" name="to" th:value="${to}"/>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <label class="form-label ds-muted">Result</label>
+        <select class="form-select" name="success">
+          <option value="" th:selected="${success == null}">All</option>
+          <option value="true" th:selected="${success != null && success}">Success</option>
+          <option value="false" th:selected="${success != null && !success}">Failure</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-2 d-flex gap-2">
+        <button class="btn ds-btn w-100" type="submit">Filter</button>
+        <a class="btn ds-btn w-100" th:href="@{/admin/audit/logins}">Reset</a>
+      </div>
+    </div>
+  </form>
+
+  <div class="ds-card p-3">
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle mb-0">
+        <thead>
+        <tr>
+          <th>When</th>
+          <th>User</th>
+          <th>IP</th>
+          <th>Success</th>
+          <th>Reason</th>
+          <th>User-Agent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${rows}">
+          <td th:text="${#temporals.format(r.loggedInAt, 'yyyy-MM-dd HH:mm:ss')}">-</td>
+          <td th:text="${r.username != null ? r.username : '-'}">-</td>
+          <td th:text="${r.ipAddress != null ? r.ipAddress : '-'}">-</td>
+          <td th:text="${r.success ? 'YES' : 'NO'}">-</td>
+          <td th:text="${r.failureReason != null ? r.failureReason : '-'}">-</td>
+          <td class="small ds-muted" th:text="${r.userAgent != null ? r.userAgent : '-'}">-</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

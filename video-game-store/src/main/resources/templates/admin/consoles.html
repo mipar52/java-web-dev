@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Consoles')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="ds-title mb-0">Admin: Consoles</h1>
+    <a class="btn ds-btn" th:href="@{/admin/games}">Back to games</a>
+  </div>
+
+  <div class="ds-card p-3 mb-3">
+    <form method="post" th:action="@{/admin/consoles}" class="d-flex gap-2">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input class="form-control" name="name" placeholder="New console name..." required maxlength="100"/>
+      <button class="btn ds-btn" type="submit">Add</button>
+    </form>
+  </div>
+
+  <div class="ds-card p-3">
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle mb-0">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${consoles}">
+          <td><a th:href="@{/admin/consoles/{id}(id=${c.id})}" th:text="${c.id}">1</a></td>
+          <td><a th:href="@{/admin/consoles/{id}(id=${c.id})}" th:text="${c.name}">Console</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

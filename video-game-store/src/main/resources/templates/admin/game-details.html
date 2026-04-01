@@ -1,0 +1,167 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Game')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+  <a th:href="@{/admin/games}" class="btn btn-sm ds-btn mb-3">&larr; Back to games</a>
+
+  <div class="ds-card p-3 p-lg-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h1 class="ds-title mb-1">
+          <span th:if="${game.id != null}">Game #<span th:text="${game.id}">1</span></span>
+          <span th:if="${game.id == null}">New game</span>
+        </h1>
+        <div class="ds-muted small" th:if="${game.id != null}">
+          Last known name: <span th:text="${game.name}">-</span>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2" th:if="${game.id != null}">
+        <form th:action="@{'/admin/games/' + ${game.id} + '/delete'}" method="post">
+          <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <button class="btn ds-btn" type="submit"
+                  onclick="return confirm('Delete this game? This may fail if the game was purchased.')">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <form th:action="${game.id == null} ? @{/admin/games} : @{'/admin/games/' + ${game.id}}"
+          method="post">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+      <div class="row g-3">
+        <div class="col-12 col-lg-8">
+          <div class="mb-2">
+            <label class="form-label ds-muted">Name</label>
+            <input class="form-control" name="name" th:value="${game.name}" required maxlength="200"/>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label ds-muted">Description</label>
+            <textarea class="form-control" name="description" rows="6" th:text="${game.description}"></textarea>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-12 col-md-4">
+              <label class="form-label ds-muted">Price (€)</label>
+              <input class="form-control" name="price" type="number" step="0.01" min="0"
+                     th:value="${game.price}" required/>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label ds-muted">Release date</label>
+              <input class="form-control" name="releaseDate" type="date"
+                     th:value="${releaseDateLocal}"/>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label ds-muted">Metacritic</label>
+              <input class="form-control" name="metacriticScore" type="number" step="0.1" min="0" max="100"
+                     th:value="${game.metacriticScore}"/>
+            </div>
+          </div>
+
+          <div class="row g-2 mt-1">
+            <div class="col-12 col-md-8">
+              <label class="form-label ds-muted">Official URL</label>
+              <input class="form-control" name="gameUrl" th:value="${game.gameUrl}"/>
+            </div>
+            <div class="col-12 col-md-4 d-flex align-items-end">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="wonGameOfTheYearAward"
+                       th:checked="${game.wonGameOfTheYearAward}"/>
+                <label class="form-check-label ds-muted">GOTY award</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3" th:if="${game.id != null}">
+            <div class="ds-muted small mb-1">Cover (stored in DB)</div>
+
+            <div class="mb-2">
+              <img th:src="@{'/media/db-covers/' + ${game.id}}"
+                   style="width:100%; max-width:280px; border-radius:12px; border:1px solid rgba(255,255,255,.08);"
+                   alt="cover"
+                   onerror="this.style.display='none'"/>
+              <div class="ds-muted small mt-2">If no image is stored, preview will be hidden.</div>
+            </div>
+
+          </div>
+
+          <div class="mt-2">
+            <label class="form-label ds-muted">Image URL</label>
+            <input class="form-control" name="imageUrl" th:value="${game.imageUrl}"/>
+            <div class="ds-muted small mt-1" th:if="${game.imagePath != null}">
+              imagePath: <span th:text="${game.imagePath}">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="mb-3">
+            <label class="form-label ds-muted">Game type</label>
+            <select class="form-select" name="gameTypeId">
+              <option th:value="${''}" th:selected="${game.gameType == null}">- none -</option>
+              <option th:each="t : ${types}"
+                      th:value="${t.id}"
+                      th:selected="${game.gameType != null && t.id == game.gameType.id}"
+                      th:text="${t.name}">
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <label class="form-label ds-muted mb-1">Genres</label>
+              <a class="ds-muted small" th:href="@{/admin/genres}">manage</a>
+            </div>
+
+            <div class="ds-card p-2" style="background: rgba(255,255,255,.02); max-height: 220px; overflow:auto;">
+              <div class="form-check" th:each="gr : ${genres}">
+                <input class="form-check-input" type="checkbox" name="genreIds"
+                       th:value="${gr.id}"
+                       th:checked="${game.gameGenres != null && game.gameGenres.contains(gr)}"
+                       th:id="${'genre_' + gr.id}"/>
+                <label class="form-check-label" th:for="${'genre_' + gr.id}" th:text="${gr.name}">genre</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <label class="form-label ds-muted mb-1">Consoles</label>
+              <a class="ds-muted small" th:href="@{/admin/consoles}">manage</a>
+            </div>
+
+            <div class="ds-card p-2" style="background: rgba(255,255,255,.02); max-height: 220px; overflow:auto;">
+              <div class="form-check" th:each="c : ${consoles}">
+                <input class="form-check-input" type="checkbox" name="consoleIds"
+                       th:value="${c.id}"
+                       th:checked="${game.consoles != null && game.consoles.contains(c)}"
+                       th:id="${'console_' + c.id}"/>
+                <label class="form-check-label" th:for="${'console_' + c.id}" th:text="${c.name}">console</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button class="btn ds-btn" type="submit">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form th:action="@{'/admin/games/' + ${game.id} + '/cover'}" method="post" enctype="multipart/form-data">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input class="form-control" type="file" name="cover" accept="image/*" required/>
+      <div class="d-flex justify-content-end mt-2">
+        <button class="btn ds-btn" type="submit">Upload cover</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
