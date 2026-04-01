@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Genre ' + ${genre.id})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container py-4">
+  <a th:href="@{/admin/genres}" class="btn btn-sm ds-btn mb-3">&larr; Back</a>
+
+  <div class="ds-card p-3 p-lg-4">
+    <h1 class="ds-title mb-3">Genre #<span th:text="${genre.id}">1</span></h1>
+
+    <form th:action="@{'/admin/genres/' + ${genre.id}}" method="post" class="mb-3">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+      <label class="form-label ds-muted">Name</label>
+      <input class="form-control mb-3" name="name" th:value="${genre.name}" required maxlength="100"/>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn ds-btn" type="submit">Save</button>
+      </div>
+    </form>
+
+    <form th:action="@{'/admin/genres/' + ${genre.id} + '/delete'}" method="post">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <button class="btn ds-btn" type="submit" onclick="return confirm('Delete this genre?')">Delete</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
