@@ -90,7 +90,7 @@ public class CheckoutController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         model.addAttribute("order", order);
-        model.addAttribute("tota", total);
+        model.addAttribute("total", total);
         return "order/details";
     }
 
