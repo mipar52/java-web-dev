@@ -1,23 +1,28 @@
 package com.milan.videogamestore.config.security;
 
-import com.milan.videogamestore.config.security.logEntries.LogAuthFailureHandler;
-import com.milan.videogamestore.config.security.logEntries.LogAuthSuccessHandler;
 import com.milan.videogamestore.repository.LogEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final LogEntryRepository logEntryRepository;
+    private final JwtFilter jwtFilter;
 
+    // za MVC sec
     @Bean
+    @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
@@ -33,8 +38,8 @@ public class SecurityConfig {
                         form
                                 .loginPage("/login")
                                 .defaultSuccessUrl("/games", true)
-                                .successHandler(new LogAuthSuccessHandler(logEntryRepository))
-                                .failureHandler(new LogAuthFailureHandler(logEntryRepository))
+                             //   .successHandler(new LogAuthSuccessHandler(logEntryRepository))
+                             //   .failureHandler(new LogAuthFailureHandler(logEntryRepository))
                                 .permitAll()
                                 .permitAll())
                 .logout(Customizer.withDefaults())
@@ -42,5 +47,23 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .httpBasic(Customizer.withDefaults())
                 .build();
+    }
+
+    // za rest api
+    @Bean
+    @Order(1)
+    SecurityFilterChain securityFilterChainForRest(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(httpRequest ->
+                        httpRequest
+                                .requestMatchers("/api/login").permitAll()
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+                        )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

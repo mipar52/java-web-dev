@@ -6,31 +6,31 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
+@Component
 @RequiredArgsConstructor
-public class LogAuthFailureHandler implements AuthenticationFailureHandler {
+public class LogAuthFailureListener {
 
     private final LogEntryRepository repo;
+    private final HttpServletRequest request;
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
-
+    @EventListener
+    public void onAuthenticationFailure(AbstractAuthenticationFailureEvent event) {
         var a = new LogEntry();
         a.setUsername(request.getParameter("username")); // iz login forme
         a.setLoggedInAt(OffsetDateTime.now());
         a.setIpAddress(RequestIpUtils.getClientIp(request));
         a.setUserAgent(request.getHeader("User-Agent"));
         a.setSuccess(false);
-        a.setFailureReason(exception.getClass().getSimpleName());
+        a.setFailureReason(event.getClass().getSimpleName());
         repo.save(a);
-
-        response.sendRedirect("/login?error");
     }
 }

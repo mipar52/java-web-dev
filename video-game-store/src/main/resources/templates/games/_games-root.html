@@ -1,0 +1,53 @@
+<div th:fragment="gamesRoot" id="gamesRoot">
+  <form th:action="@{/games}"
+        method="get"
+        class="ds-card p-3 mb-3"
+        th:attr="hx-get=@{/games}"
+        hx-target="#gamesRoot"
+        hx-swap="outerHTML"
+        hx-push-url="true"
+        hx-trigger="change from:input, submit">
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <div class="ds-title" style="font-size:1rem;">Filter by categories</div>
+        <div class="ds-muted small">Matches <b>all</b> selected categories (AND).</div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm ds-btn" type="submit">Apply</button>
+        <a class="btn btn-sm ds-btn"
+           th:href="@{/games}"
+           hx-get="@{/games}"
+           hx-target="#gamesRoot"
+           hx-swap="outerHTML"
+           hx-push-url="true">
+          Clear
+        </a>
+      </div>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <div class="d-flex flex-wrap gap-2">
+      <label class="ds-chip" th:each="gen : ${allGenres}">
+        <input class="form-check-input me-1"
+               type="checkbox"
+               name="genreId"
+               th:value="${gen.id}"
+               th:checked="${selectedGenreIds != null and selectedGenreIds.contains(gen.id)}"/>
+        <span th:text="${gen.name}">action</span>
+      </label>
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-between align-items-end mb-3">
+    <div>
+      <h1 class="ds-title mb-1">Games</h1>
+      <div class="ds-muted">Browse the catalogue. Choose wisely.</div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+  <div th:replace="~{games/_games-page :: gamesPage}"></div>
+</div>

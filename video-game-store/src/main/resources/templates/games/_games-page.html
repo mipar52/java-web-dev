@@ -1,0 +1,126 @@
+<div th:fragment="gamesPage">
+  <div class="row g-3">
+    <div class="col-12 col-md-6 col-lg-4" th:each="g : ${gamesPage.content}">
+      <div class="ds-card p-3 h-100 d-flex flex-column">
+
+        <div class="ds-thumb mb-3">
+          <img th:if="${g.id != null}"
+               th:attr="data-fallback=${g.imageUrl}"
+               th:src="@{'/media/db-covers/' + ${g.id}}"
+               alt="cover"
+               onerror="
+                 const fb = this.getAttribute('data-fallback');
+                 if (fb && fb.trim().length > 0 && this.src !== fb) { this.src = fb; }
+                 else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }
+               "/>
+
+          <div class="h-100 d-flex align-items-center justify-content-center ds-muted" style="display:none;">
+            No cover
+          </div>
+        </div>
+
+        <!-- title + price -->
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-2">
+            <div class="ds-title" style="font-size: 1.05rem;" th:text="${g.name}">Game name</div>
+            <div class="ds-muted small" th:if="${g.gameType != null}">
+              Type: <span th:text="${g.gameType.name}">singleplayer</span>
+            </div>
+          </div>
+          <div class="text-end">
+            <div class="ds-price" th:text="${g.price} + ' €'">59.99 €</div>
+            <span class="ds-badge" th:if="${g.wonGameOfTheYearAward}">GOTY</span>
+          </div>
+        </div>
+
+        <div class="ds-divider"></div>
+
+        <div class="ds-muted small mb-2">
+          <span th:if="${g.releaseDate != null}">
+            Released: <span th:text="${#temporals.format(g.releaseDate, 'yyyy-MM-dd')}">2026-01-01</span>
+          </span>
+          <span th:if="${g.metacriticScore != null}">
+            <span th:if="${g.releaseDate != null}"> • </span>
+            Metacritic: <span th:text="${g.metacriticScore}">90</span>
+          </span>
+          <span>
+            <span th:if="${g.releaseDate != null || g.metacriticScore != null}"> • </span>
+            Reviews: <span th:text="${g.reviews != null ? g.reviews.size() : 0}">0</span>
+          </span>
+        </div>
+
+        <div class="mb-2">
+          <div class="ds-muted small mb-1">Categories</div>
+          <span class="ds-chip" th:each="cat : ${g.gameGenres}" th:text="${cat.name}">action</span>
+        </div>
+
+        <div class="mb-3">
+          <div class="ds-muted small mb-1">Platforms</div>
+          <span class="ds-chip" th:each="c : ${g.consoles}" th:text="${c.name}">PC</span>
+        </div>
+
+        <p class="ds-muted small flex-grow-1" th:if="${g.description != null}"
+           th:text="${#strings.abbreviate(g.description, 140)}">
+          Description...
+        </p>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a class="btn btn-sm ds-btn" th:href="@{/games/{id}(id=${g.id})}">View details</a>
+        </div>
+
+        <form th:action="@{/cart/items}" method="post" class="d-flex gap-2">
+          <input type="hidden" name="gameId" th:value="${g.id}"/>
+          <input type="hidden" name="quantity" value="1"/>
+          <input type="hidden" name="returnUrl" th:value="${currentPath}"/>
+
+          <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+          <button class="btn btn-sm ds-btn" type="submit">Add</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- pager -->
+  <div class="d-flex justify-content-center mt-4" th:if="${gamesPage.totalPages > 1}">
+    <div class="btn-group" role="group" aria-label="Pagination">
+
+      <!-- Prev -->
+      <a class="btn btn-sm ds-btn"
+         th:classappend="${gamesPage.first} ? ' disabled' : ''"
+         th:href="@{/games(page=${gamesPage.number - 1}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         th:attr="hx-get=@{/games(page=${i}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         hx-target="#gamesRoot"
+         hx-swap="outerHTML"
+         hx-push-url="true">
+        Prev
+      </a>
+
+      <!-- Pages -->
+      <a class="btn btn-sm ds-btn"
+         th:each="i : ${#numbers.sequence(0, gamesPage.totalPages - 1)}"
+         th:text="${i + 1}"
+         th:classappend="${i == gamesPage.number} ? ' active' : ''"
+         th:href="@{/games(page=${i}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         th:attr="hx-get=@{/games(page=${i}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         hx-target="#gamesRoot"
+         hx-swap="outerHTML"
+         hx-push-url="true">
+        1
+      </a>
+
+      <!-- Next -->
+      <a th:if="${!gamesPage.last}"
+         class="btn btn-sm ds-btn"
+         th:href="@{/games(page=${gamesPage.number + 1}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         th:attr="hx-get=@{/games(page=${i}, size=${gamesPage.size}, genreId=${selectedGenreIds})}"
+         hx-target="#gamesRoot"
+         hx-swap="outerHTML"
+         hx-push-url="true">
+        Next
+      </a>
+
+    </div>
+  </div>
+</div>

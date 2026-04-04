@@ -85,9 +85,12 @@
         </div>
 
         <!-- Link -->
-        <div class="mb-0" th:if="${game.gameUrl != null && !#strings.isEmpty(game.gameUrl)}">
-          <a th:href="${game.gameUrl}" target="_blank" rel="noreferrer">Official link</a>
-        </div>
+        <a class="btn btn-sm ds-btn" style="margin-bottom: 10px"
+           th:if="${game.gameUrl != null && !#strings.isEmpty(game.gameUrl)}"
+           th:href="${game.gameUrl}"
+           target="_blank" rel="noreferrer">
+          Official site
+        </a>
 
         <!-- Actions -->
         <form th:action="@{/cart/add}" method="post" class="d-flex gap-2 align-items-center">
@@ -99,19 +102,14 @@
           <button class="btn ds-btn" type="submit">Add to cart</button>
         </form>
 
-          <a class="btn ds-btn" href="#reviews" sec:authorize="isAuthenticated()">
-            Add / edit my review
+          <a class="btn ds-btn" href="#reviews" style="margin-top: 10px" sec:authorize="isAuthenticated()">
+            Add / delete my review
           </a>
 
-          <span class="ds-muted small" sec:authorize="isAnonymous()">
-    <a th:href="@{/login}">Log in</a> to leave a review.
-  </span>
         </div>
 
       </div>
     </div>
-  </div>
-
   <!-- REVIEWS -->
   <div class="ds-card p-3 p-lg-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -127,6 +125,10 @@
       <a th:href="@{/login}">Log in</a> to write a review.
     </div>
     <div class="ds-card p-3 mb-3" sec:authorize="isAuthenticated()">
+      <div class="d-flex gap-2 justify-content-end align-items-center">
+
+
+      </div>
       <form th:action="@{/games/{id}/reviews(id=${game.id})}" method="post" th:object="${reviewForm}">
         <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
@@ -160,13 +162,14 @@
 
         <div class="d-flex gap-2 justify-content-end">
           <button class="btn ds-btn" type="submit">Save review</button>
-
-          <button class="btn ds-btn" type="submit"
-                  formaction="/games/[[${game.id}]]/reviews/delete" formmethod="post">
-            Delete my review
-          </button>
         </div>
       </form>
+      <form th:action="@{/games/{gameId}/reviews/delete(gameId=${game.id})}"
+            method="post" class="d-flex justify-content-end">
+        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button class="btn ds-btn ds-btn-danger" type="submit">Delete my review</button>
+      </form>
+
       <div class="col-12 col-md-6">
         <div class="ds-card p-3" style="background: rgba(255,255,255,.02);">
           <div class="ds-muted small">Reviews</div>
@@ -207,7 +210,6 @@
       <div class="mt-2" th:text="${r.comment}">comment</div>
     </div>
   </div>
-
-</div>
+  </div>
 </body>
 </html>
