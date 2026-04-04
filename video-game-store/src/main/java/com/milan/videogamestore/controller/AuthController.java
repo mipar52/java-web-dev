@@ -1,17 +1,25 @@
 package com.milan.videogamestore.controller;
 
+import com.milan.videogamestore.config.security.JwtService;
+import com.milan.videogamestore.model.auth.LoginRequest;
+import com.milan.videogamestore.model.auth.RefreshToken;
+import com.milan.videogamestore.model.auth.TokenResponse;
 import com.milan.videogamestore.model.dto.RegisterForm;
 import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.repository.AppUserRepository;
+import com.milan.videogamestore.repository.RefreshTokenRepository;
 import com.milan.videogamestore.repository.UserRoleRepository;
+import com.milan.videogamestore.security.RefreshTokenUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.SecureRandom;
+import java.time.Instant;
+import java.util.Base64;
 
 @Controller
 @RequiredArgsConstructor
@@ -57,5 +65,4 @@ public class AuthController {
         return "redirect:/login?registered";
 
     }
-
 }
