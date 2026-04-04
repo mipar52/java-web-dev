@@ -1,7 +1,9 @@
 package com.milan.videogamestore.config.security.logEntries;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RequestIpUtils {
     public static String getClientIp(HttpServletRequest request) {
         String xff = request.getHeader("X-Forwarded-For");
