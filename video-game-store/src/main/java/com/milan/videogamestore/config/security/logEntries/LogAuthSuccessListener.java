@@ -1,18 +1,13 @@
 package com.milan.videogamestore.config.security.logEntries;
 
-import com.milan.videogamestore.model.logs.LogEntry;
+import com.milan.videogamestore.model.logEntry.LogEntry;
 import com.milan.videogamestore.repository.LogEntryRepository;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.OffsetDateTime;
 
 @Component

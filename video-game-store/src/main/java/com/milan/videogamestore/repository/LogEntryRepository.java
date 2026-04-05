@@ -1,7 +1,6 @@
 package com.milan.videogamestore.repository;
 
-import com.milan.videogamestore.model.logs.LogEntry;
-import lombok.extern.java.Log;
+import com.milan.videogamestore.model.logEntry.LogEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
