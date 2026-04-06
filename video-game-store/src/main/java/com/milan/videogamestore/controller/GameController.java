@@ -24,6 +24,11 @@ public class GameController {
     private final GenreRepository genreRepository;
     private final GameReviewRepository reviewRepository;
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/games";
+    }
+
     @GetMapping
     public String listGames(
             @RequestParam(name = "genreId", required = false) List<Long> genreIds,
