@@ -109,9 +109,9 @@ public class CheckoutController {
         for (var entrySet: cart.getQuantities().entrySet()) {
             Game game = gameRepository.findById(entrySet.getKey()).orElse(null);
             if (game == null) continue;
-
             int quantity = entrySet.getValue();
             var line = game.getPrice().multiply(BigDecimal.valueOf(quantity));
+            items.add(new CartLine(game.getId(), game.getName(), entrySet.getValue(), game.getPrice(), line));
             total = total.add(line);
         }
         return new Summary(items, total);
