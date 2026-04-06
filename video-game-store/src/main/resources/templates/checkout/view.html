@@ -89,5 +89,35 @@
     </div>
 </div>
 
+<div id="checkoutLoader" class="ds-loader-overlay" aria-hidden="true">
+    <div class="ds-loader-card">
+        <div class="ds-spinner"></div>
+        <div class="ds-title" style="font-size: 1rem; margin-top: .75rem;">Processing payment…</div>
+        <div class="ds-muted small">Please wait, do not refresh the page.</div>
+    </div>
+</div>
+
+<script>
+    (function () {
+      const form = document.querySelector('form[action="/checkout"], form[th\\:action], form[action$="/checkout"]') || document.querySelector('form');
+      const overlay = document.getElementById('checkoutLoader');
+      if (!form || !overlay) return;
+
+      form.addEventListener('submit', function () {
+        overlay.classList.add('is-active');
+
+        // optional: disable all submit buttons to prevent double submit
+        form.querySelectorAll('button[type="submit"]').forEach(b => b.disabled = true);
+      });
+    })();
+</script>
+
+<script>
+    window.addEventListener('pageshow', () => {
+      const overlay = document.getElementById('checkoutLoader');
+      if (overlay) overlay.classList.remove('is-active');
+    });
+</script>
+
 </body>
 </html>

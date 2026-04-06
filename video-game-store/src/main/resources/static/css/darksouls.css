@@ -241,3 +241,42 @@ a:hover{ color: #F1C66F; }
   border-color: rgba(214,162,77,.55);
   background: rgba(214,162,77,.14);
 }
+
+.ds-loader-overlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+}
+
+.ds-loader-overlay.is-active{
+  display: flex;
+}
+
+.ds-loader-card{
+  width: min(420px, calc(100% - 2rem));
+  padding: 1.25rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(214,162,77,.22);
+  background: rgba(25, 22, 22, .92);
+  box-shadow: 0 22px 55px rgba(0,0,0,.65);
+  text-align: center;
+}
+
+.ds-spinner{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(214,162,77,.25);
+  border-top-color: rgba(214,162,77,.95);
+  animation: ds-spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes ds-spin{
+  to { transform: rotate(360deg); }
+}
