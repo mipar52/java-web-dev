@@ -33,11 +33,12 @@ public class CheckoutController {
     public String checkout(@ModelAttribute("cart") Cart cart, Model model) {
         if (cart.getQuantities().isEmpty()) return "redirect:/cart";
         Summary summary = buildSummary(cart);
+        CheckoutForm checkoutForm = new CheckoutForm();
+        checkoutForm.setPaymentMethod(PaymentMethod.COD);
 
         model.addAttribute("items", summary.items());
         model.addAttribute("total", summary.total());
-        model.addAttribute("form", new CheckoutForm());
-        model.addAttribute("paymentMethod", PaymentMethod.COD);
+        model.addAttribute("form", checkoutForm);
 
         return "checkout/view";
     }
@@ -46,14 +47,17 @@ public class CheckoutController {
     public String placeOrder(@ModelAttribute("cart") Cart cart, @ModelAttribute("form") CheckoutForm form, Authentication authentication) {
         if (cart.getQuantities().isEmpty()) return "redirect:/cart";
 
+        if (form.getPaymentMethod() == PaymentMethod.PAYPAL) {
+            return "forward:/checkout/paypal/start";
+        }
+
         var username = authentication.getName();
         var user = appUserRepository.findByUsernameWithRole(username).orElseThrow(() -> new IllegalArgumentException("Logged in user not found: " + username));
-
         Order order = new Order();
         order.setUser(user);
 
         order.setStatus(OrderStatus.CREATED);
-        order.setPaymentMethod(PaymentMethod.COD);
+        order.setPaymentMethod(form.getPaymentMethod());
         order.setShippingAddress(form.getShippingAddress());
         order.setCity(form.getCity());
         order.setZip(form.getZip());

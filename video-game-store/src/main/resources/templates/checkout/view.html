@@ -44,17 +44,24 @@
                         <input class="form-control" id="phone" th:field="*{phone}" required/>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2">
-                        <button class="btn ds-btn" type="submit"
-                                formaction="/checkout" formmethod="post">
-                            Place order (COD)
-                        </button>
 
-                        <button class="btn ds-btn" type="submit"
-                                formaction="/checkout/paypal/start" formmethod="post">
-                            Pay with PayPal
-                        </button>
+                    <div class="ds-card p-3 mb-3" style="background: rgba(255,255,255,.02);">
+                        <div class="ds-muted small mb-2">Payment method</div>
+
+                        <label class="d-flex align-items-center gap-2 mb-2">
+                            <input type="radio" th:field="*{paymentMethod}" value="COD">
+                            <span>Cash on Delivery (COD)</span>
+                        </label>
+
+                        <label class="d-flex align-items-center gap-2">
+                            <input type="radio" th:field="*{paymentMethod}" value="PAYPAL">
+                            <span>PayPal</span>
+                        </label>
                     </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button class="btn ds-btn" type="submit">Pay</button>
+                        </div>
                 </form>
             </div>
         </div>
@@ -70,7 +77,7 @@
                         <div th:text="${it.name}">Game</div>
                         <div class="ds-muted small">x<span th:text="${it.quantity}">1</span> @ <span th:text="${it.unitPrice} + ' €'">0</span></div>
                     </div>
-                    <div class="ds-price" th:text="${it.lineTotal} + ' €'">0</div>
+                    <div class="ds-price" th:text="${it.linePrice} + ' €'">0</div>
                 </div>
 
                 <div class="ds-divider"></div>
