@@ -3,8 +3,6 @@ package com.milan.videogamestore.model.orders;
 import com.milan.videogamestore.model.game.Game;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.aspectj.weaver.ast.Or;
-import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 

@@ -28,6 +28,9 @@ public class AdminGameController {
     private final ConsoleRepository consoleRepository;
     private final GameCoverRepository gameCoverRepository;
 
+    private static final String admin_redirect = "redirect:/admin/games/";
+    private static final String game_err = "Game not found: ";
+
     @GetMapping("/admin/games")
     public String list(@RequestParam(required = false) String q, Model model) {
         model.addAttribute("games", gameRepository.adminSearch(q));
@@ -45,7 +48,7 @@ public class AdminGameController {
     @GetMapping("/admin/games/{id}")
     public String details(@PathVariable Long id, Model model) {
         var game = gameRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(game_err + id));
 
         model.addAttribute("game", game);
         model.addAttribute("releaseDateLocal",
@@ -74,7 +77,7 @@ public class AdminGameController {
                 imageUrl, price, gameTypeId, genreIds, consoleIds);
 
         gameRepository.save(game);
-        return "redirect:/admin/games/" + game.getId();
+        return admin_redirect + game.getId();
     }
 
     @PostMapping("/admin/games/{id}")
@@ -93,20 +96,20 @@ public class AdminGameController {
             @RequestParam(required = false, name = "consoleIds") Set<Long> consoleIds
     ) {
         var game = gameRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(game_err + id));
 
         applyGameFields(game, name, description, releaseDate, gameUrl, metacriticScore, wonGameOfTheYearAward,
                 imageUrl, price, gameTypeId, genreIds, consoleIds);
 
         gameRepository.save(game);
-        return "redirect:/admin/games/" + id;
+        return admin_redirect + id;
     }
 
     @PostMapping("/admin/games/{id}/delete")
     public String delete(@PathVariable Long id) {
         // NOTE: ovo može failati ako postoje OrderItem referencije.
         gameRepository.deleteById(id);
-        return "redirect:/admin/games";
+        return admin_redirect;
     }
 
     private void populateLookups(Model model) {
@@ -163,11 +166,10 @@ public class AdminGameController {
                                   @RequestParam("cover") MultipartFile cover) throws Exception {
 
         var game = gameRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(game_err + id));
 
         if (cover == null || cover.isEmpty()) {
-            System.out.println("got nothing");
-            return "redirect:/admin/games/" + id;
+            return admin_redirect + id;
         }
 
         String contentType = cover.getContentType();
@@ -186,7 +188,6 @@ public class AdminGameController {
         gameCover.setData(bytes);
 
         gameCoverRepository.save(gameCover);
-        System.out.println("Uploaded!");
-        return "redirect:/admin/games/" + id;
+        return admin_redirect + id;
     }
 }

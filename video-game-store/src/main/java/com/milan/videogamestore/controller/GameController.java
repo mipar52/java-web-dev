@@ -8,7 +8,6 @@ import com.milan.videogamestore.repository.GenreRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +23,11 @@ public class GameController {
     private final GenreRepository genreRepository;
     private final GameReviewRepository reviewRepository;
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/games";
-    }
-
     @GetMapping
     public String listGames(
             @RequestParam(name = "genreId", required = false) List<Long> genreIds,
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "3") int size,
+            @RequestParam(name = "size", defaultValue = "5") int size,
             @RequestHeader(value = "HX-Request", required = false) String hxRequest,
             HttpServletRequest request,
             Model model

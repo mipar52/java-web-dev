@@ -3,7 +3,6 @@ package com.milan.videogamestore.security;
 import com.milan.videogamestore.model.auth.RefreshToken;
 import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.repository.RefreshTokenRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +22,18 @@ public class RefreshTokenUtils {
     }
 
     public String issueRefreshToken(AppUser appUser) {
-        String token = randomToken(48);
+        String token = randomToken();
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(token);
         refreshToken.setUser(appUser);
         refreshToken.setExpiresAt(Instant.now().plusSeconds(refreshTtlSeconds));
         refreshToken.setRevoked(false);
-        System.out.println("Issued refresh token: " + refreshToken.getToken());
         refreshTokenRepository.save(refreshToken);
         return token;
     }
 
-    private static String randomToken(int bytes) {
-        byte[] b = new byte[bytes];
+    private static String randomToken() {
+        byte[] b = new byte[48];
         new SecureRandom().nextBytes(b);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(b);
     }

@@ -1,6 +1,8 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Admin - Console ' + ${console.id})}"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Admin - Console ' + ${console.id})}">
+  <title>Console details</title>
+</head>
 <body>
 <nav th:replace="~{fragments/layout :: nav}"></nav>
 
@@ -13,8 +15,10 @@
     <form th:action="@{'/admin/consoles/' + ${console.id}}" method="post" class="mb-3">
       <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-      <label class="form-label ds-muted">Name</label>
-      <input class="form-control mb-3" name="name" th:value="${console.name}" required maxlength="100"/>
+      <label class="form-label ds-muted">
+        Name
+        <input class="form-control mb-3" name="name" th:value="${console.name}" required maxlength="100"/>
+      </label>
 
       <div class="d-flex justify-content-end gap-2">
         <button class="btn ds-btn" type="submit">Save</button>

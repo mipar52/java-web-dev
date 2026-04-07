@@ -23,7 +23,7 @@ public class SecurityConfig {
     // za MVC sec
     @Bean
     @Order(2)
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
@@ -52,7 +52,7 @@ public class SecurityConfig {
     // za rest api
     @Bean
     @Order(1)
-    SecurityFilterChain securityFilterChainForRest(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChainForRest(HttpSecurity http) {
         http.securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -8,7 +8,6 @@ import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.repository.AppUserRepository;
 import com.milan.videogamestore.repository.GameRepository;
 import com.milan.videogamestore.repository.LogEntryRepository;
-import com.milan.videogamestore.repository.RefreshTokenRepository;
 import com.milan.videogamestore.security.RefreshTokenUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +52,6 @@ public class RandomRestController {
     @GetMapping(value = "/admin/logs.csv", produces = "text/csv")
     public ResponseEntity<byte[]> exportCsv() {
         var rows = logEntryRepository.findAll();
-        System.out.println("got rows: " + rows.size());
 
         StringBuilder sb = new StringBuilder();
         sb.append("id,createdAt,username,ipAddress,success,reason,userAgent\n");

@@ -18,6 +18,8 @@ public class CartController {
 
     private final GameRepository gameRepository;
 
+    private static final String CART_URL = "redirect:/cart";
+
     @ModelAttribute("cart")
     public Cart cart() {
         return new Cart();
@@ -77,19 +79,19 @@ public class CartController {
             @ModelAttribute("cart") Cart cart
     ) {
         cart.setQuantity(gameId, quantity);
-        return "redirect:/cart";
+        return CART_URL;
     }
 
     @PostMapping("/items/{gameId}/remove")
     public String removeItem(@PathVariable Long gameId, @ModelAttribute("cart") Cart cart) {
         cart.remove(gameId);
-        return "redirect:/cart";
+        return CART_URL;
     }
 
     @PostMapping("/clear")
     public String clear(@ModelAttribute("cart") Cart cart) {
         cart.clear();
-        return "redirect:/cart";
+        return CART_URL;
     }
 
     public record CartItemView(Long gameId, String name, BigDecimal price, int quantity, BigDecimal lineTotal) {}

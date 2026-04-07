@@ -7,10 +7,6 @@ import com.milan.videogamestore.model.game.Genre;
 import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.model.users.UserRole;
 import com.milan.videogamestore.repository.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -39,23 +35,33 @@ public class DataSeeder {
                 return;
             }
 
-            UserRole userRole = roleRepo.findByName("USER")
-                    .orElseGet(() -> roleRepo.save(new UserRole("USER")));
-
             UserRole adminRole = roleRepo.findByName("ADMIN")
                     .orElseGet(() -> roleRepo.save(new UserRole("ADMIN")));
 
-            AppUser user = new AppUser();
-            user.setFirstName("Adminka");
-            user.setLastName("Adminkic");
-            user.setEmail("admin@gmail.com");
-            user.setUsername("admin");
-            user.setPasswordHash(passwordEncoder.encode("admin"));
-            user.setMobilePhone("0919284901");
-            user.setRole(adminRole);
+            UserRole userRole = roleRepo.findByName("USER")
+                    .orElseGet(() -> roleRepo.save(new UserRole("USER")));
 
-            AppUser newUser = appUserRepository.save(user);
-            System.out.println("Added new user: " + newUser);
+            AppUser adminUser = new AppUser();
+            adminUser.setFirstName("Adminka");
+            adminUser.setLastName("Adminkic");
+            adminUser.setEmail("admin@gmail.com");
+            adminUser.setUsername("admin");
+            adminUser.setPasswordHash(passwordEncoder.encode("admin"));
+            adminUser.setMobilePhone("0919284901");
+            adminUser.setRole(adminRole);
+
+            appUserRepository.save(adminUser);
+
+            AppUser regularUser = new AppUser();
+            regularUser.setFirstName("Branko");
+            regularUser.setLastName("Kockica");
+            regularUser.setEmail("branko.kockica@gmail.com");
+            regularUser.setUsername("branko");
+            regularUser.setPasswordHash(passwordEncoder.encode("branko"));
+            regularUser.setMobilePhone("0919284901");
+            regularUser.setRole(userRole);
+
+            appUserRepository.save(adminUser);
 
             GameType single = new GameType();
             single.setName("singleplayer");
@@ -123,6 +129,8 @@ public class DataSeeder {
             // Games
             Game g1 = new Game();
             g1.setName("Elden Ring");
+            g1.setImageUrl("https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/YMUoJUYNX0xWk6eTKuZLr5Iw.jpg");
+            g1.setGameUrl("https://store.steampowered.com/app/1245620/ELDEN_RING/");
             g1.setDescription("Open-world action RPG.");
             g1.setReleaseDate(OffsetDateTime.now().minusYears(4));
             g1.setPrice(new BigDecimal("59.99"));
@@ -135,6 +143,8 @@ public class DataSeeder {
 
             Game g2 = new Game();
             g2.setName("Helldivers 2");
+            g1.setImageUrl("https://gaming-cdn.com/images/products/9575/orig/helldivers-2-pc-game-steam-europe-and-us-and-canada-cover.jpg?v=1732563825");
+            g1.setGameUrl("https://store.steampowered.com/app/553850/HELLDIVERS_2/");
             g2.setDescription("Co-op PvE shooter.");
             g2.setReleaseDate(OffsetDateTime.now().minusYears(2));
             g2.setPrice(new BigDecimal("39.99"));
@@ -147,6 +157,8 @@ public class DataSeeder {
 
             Game g3 = new Game();
             g3.setName("Baldur's Gate 3");
+            g1.setImageUrl("https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/48a2fcbda8565bb45025e98fd8ebde8a7203f6a0/header.jpg?t=1773079016");
+            g1.setGameUrl("https://store.steampowered.com/app/1086940/Baldurs_Gate_3/");
             g3.setDescription("Story-rich party-based RPG with turn-based combat.");
             g3.setReleaseDate(OffsetDateTime.now().minusYears(3));
             g3.setPrice(new BigDecimal("59.99"));
@@ -159,6 +171,8 @@ public class DataSeeder {
 
             Game g4 = new Game();
             g4.setName("Cyberpunk 2077");
+            g1.setImageUrl("https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/e9047d8ec47ae3d94bb8b464fb0fc9e9972b4ac7/header.jpg?t=1769690377");
+            g1.setGameUrl("https://store.steampowered.com/app/1091500/Cyberpunk_2077/");
             g4.setDescription("Futuristic open-world action RPG.");
             g4.setReleaseDate(OffsetDateTime.now().minusYears(5));
             g4.setPrice(new BigDecimal("49.99"));
@@ -171,6 +185,8 @@ public class DataSeeder {
 
             Game g5 = new Game();
             g5.setName("Hades");
+            g1.setImageUrl("https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/header.jpg?t=1758127023");
+            g1.setGameUrl("https://store.steampowered.com/app/1145360/Hades/");
             g5.setDescription("Fast-paced roguelike dungeon crawler.");
             g5.setReleaseDate(OffsetDateTime.now().minusYears(6));
             g5.setPrice(new BigDecimal("24.99"));
@@ -183,6 +199,8 @@ public class DataSeeder {
 
             Game g6 = new Game();
             g6.setName("Stardew Valley");
+            g1.setImageUrl("https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg?t=1754692865");
+            g1.setGameUrl("https://store.steampowered.com/app/413150/Stardew_Valley/");
             g6.setDescription("Cozy farming & life simulation.");
             g6.setReleaseDate(OffsetDateTime.now().minusYears(10));
             g6.setPrice(new BigDecimal("14.99"));
@@ -195,6 +213,8 @@ public class DataSeeder {
 
             Game g7 = new Game();
             g7.setName("Resident Evil 4 (Remake)");
+            g1.setImageUrl("https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/header.jpg?t=1772502922");
+            g1.setGameUrl("https://store.steampowered.com/app/2050650/Resident_Evil_4/");
             g7.setDescription("Survival horror remake of a classic.");
             g7.setReleaseDate(OffsetDateTime.now().minusYears(3));
             g7.setPrice(new BigDecimal("59.99"));
@@ -207,17 +227,17 @@ public class DataSeeder {
 
             Game g8 = new Game();
             g8.setName("Overwatch 2");
+            g1.setImageUrl("https://upload.wikimedia.org/wikipedia/en/8/89/Overwatch_2_Steam_artwork.jpg");
+            g1.setGameUrl("https://en.wikipedia.org/wiki/Overwatch_2");
             g8.setDescription("Team-based multiplayer hero shooter.");
             g8.setReleaseDate(OffsetDateTime.now().minusYears(4));
-            g8.setPrice(new BigDecimal("0.00"));
+            g8.setPrice(new BigDecimal("31.67"));
             g8.setMetacriticScore(79.0);
             g8.setWonGameOfTheYearAward(false);
             g8.setGameType(multi);
             g8.setGameGenres(Set.of(action, shooter));
             g8.setConsoles(Set.of(pc, ps5, xsx, switchConsole));
             gameRepository.save(g8);
-
-            System.out.println("Seeded initial data (users, game types, genres, consoles, games).");
         };
     }
 }
