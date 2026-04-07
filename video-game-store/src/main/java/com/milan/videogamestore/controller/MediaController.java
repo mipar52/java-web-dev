@@ -21,7 +21,7 @@ public class MediaController {
         MediaType mt;
         try {
             mt = MediaType.parseMediaType(cover.getContentType());
-        } catch (Exception e) {
+        } catch (Exception ex) {
             mt = MediaType.APPLICATION_OCTET_STREAM;
         }
 

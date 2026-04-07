@@ -8,7 +8,6 @@ import com.milan.videogamestore.repository.GenreRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +22,6 @@ public class GameController {
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
     private final GameReviewRepository reviewRepository;
-
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/games";
-    }
 
     @GetMapping
     public String listGames(

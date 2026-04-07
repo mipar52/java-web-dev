@@ -1,6 +1,6 @@
-package com.milan.videogamestore.config.security.logEntries;
+package com.milan.videogamestore.config.security.logentries;
 
-import com.milan.videogamestore.model.logEntry.LogEntry;
+import com.milan.videogamestore.model.logentry.LogEntry;
 import com.milan.videogamestore.repository.LogEntryRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

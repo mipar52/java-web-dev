@@ -16,13 +16,16 @@ public class AppUser {
     @Column(nullable = false, unique = true)
     public String email;
 
+    @Column(nullable = false)
     public String firstName;
 
+    @Column(nullable = false)
     public String lastName;
 
     @Column(nullable = false)
     public String passwordHash;
 
+    @Column(nullable = true)
     public String mobilePhone;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

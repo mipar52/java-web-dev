@@ -7,10 +7,6 @@ import com.milan.videogamestore.model.game.Genre;
 import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.model.users.UserRole;
 import com.milan.videogamestore.repository.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -39,9 +35,6 @@ public class DataSeeder {
                 return;
             }
 
-            UserRole userRole = roleRepo.findByName("USER")
-                    .orElseGet(() -> roleRepo.save(new UserRole("USER")));
-
             UserRole adminRole = roleRepo.findByName("ADMIN")
                     .orElseGet(() -> roleRepo.save(new UserRole("ADMIN")));
 
@@ -53,9 +46,6 @@ public class DataSeeder {
             user.setPasswordHash(passwordEncoder.encode("admin"));
             user.setMobilePhone("0919284901");
             user.setRole(adminRole);
-
-            AppUser newUser = appUserRepository.save(user);
-            System.out.println("Added new user: " + newUser);
 
             GameType single = new GameType();
             single.setName("singleplayer");
@@ -216,8 +206,6 @@ public class DataSeeder {
             g8.setGameGenres(Set.of(action, shooter));
             g8.setConsoles(Set.of(pc, ps5, xsx, switchConsole));
             gameRepository.save(g8);
-
-            System.out.println("Seeded initial data (users, game types, genres, consoles, games).");
         };
     }
 }

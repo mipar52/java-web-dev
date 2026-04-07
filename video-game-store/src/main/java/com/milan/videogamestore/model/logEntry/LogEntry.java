@@ -1,4 +1,4 @@
-package com.milan.videogamestore.model.logEntry;
+package com.milan.videogamestore.model.logentry;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

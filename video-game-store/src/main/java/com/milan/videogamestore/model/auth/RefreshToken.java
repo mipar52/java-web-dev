@@ -2,12 +2,9 @@ package com.milan.videogamestore.model.auth;
 
 import com.milan.videogamestore.model.users.AppUser;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 
 @Data
 @Entity

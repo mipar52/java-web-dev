@@ -24,7 +24,6 @@ public class JwtService {
     public String generateAccessToken(AppUser appUser) {
         Instant now = Instant.now();
         Instant expiryTime = now.plusSeconds(secondsValid);
-        System.out.println("JWT username=" + appUser.getUsername() + " role=" + appUser.getRole());
 
         return Jwts.builder()
                 .subject(appUser.username)

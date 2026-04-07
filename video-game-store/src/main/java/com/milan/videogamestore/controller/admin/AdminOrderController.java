@@ -1,12 +1,10 @@
 package com.milan.videogamestore.controller.admin;
 
-import com.milan.videogamestore.model.game.Game;
 import com.milan.videogamestore.model.orders.Order;
 import com.milan.videogamestore.model.orders.OrderStatus;
 import com.milan.videogamestore.model.users.AppUser;
 import com.milan.videogamestore.model.users.UserRole;
 import com.milan.videogamestore.repository.AppUserRepository;
-import com.milan.videogamestore.repository.GameRepository;
 import com.milan.videogamestore.repository.OrderRepository;
 import com.milan.videogamestore.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,8 @@ public class AdminOrderController {
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository roleRepository;
     private final AppUserRepository appUserRepository;
-    private final GameRepository gameRepository;
+
+    private static final String ORDER_ERR = "Order not found: ";
 
     @GetMapping("/admin/create")
     public String createAdmin() {
@@ -72,7 +71,7 @@ public class AdminOrderController {
 
     @PostMapping("admin/orders/{orderId}/status")
     public String updateStatus(@PathVariable Long orderId, @RequestParam("status") OrderStatus status) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException(ORDER_ERR + orderId));
 
         order.setStatus(status);
 
@@ -82,12 +81,12 @@ public class AdminOrderController {
             order.setPaidAt(OffsetDateTime.now());
         }
 
-        if (order.getStatus() == OrderStatus.CANCELLED_BY_USER && status != OrderStatus.CANCELLED_BY_USER) {
-         //   throw new IllegalStateException("Cannot change a user-cancelled order");
-        }
-        if (status == OrderStatus.PAID && order.getPaidAt() == null) {
-            //   throw new IllegalStateException("Cannot set PAID without paidAt");
-        }
+//        if (order.getStatus() == OrderStatus.CANCELLED_BY_USER && status != OrderStatus.CANCELLED_BY_USER) {
+//         //   throw new IllegalStateException("Cannot change a user-cancelled order");
+//        }
+//        if (status == OrderStatus.PAID && order.getPaidAt() == null) {
+//            //   throw new IllegalStateException("Cannot set PAID without paidAt");
+//        }
 
         orderRepository.save(order);
         return "redirect:/admin/orders/" + order.getId();
@@ -97,7 +96,7 @@ public class AdminOrderController {
     public String getOrderDetails(@PathVariable Long id, Model model) {
 
         var order = orderRepository.findWithItemsById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(ORDER_ERR + id));
 
         model.addAttribute("order", order);
         return "admin/order-details";
@@ -110,7 +109,7 @@ public class AdminOrderController {
                                  @RequestParam("zip") String zip,
                                  @RequestParam("phone") String phone) {
 
-        Order order = orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ORDER_ERR + id));
 
         order.setShippingAddress(shippingAddress == null ? "" : shippingAddress.trim());
         order.setCity(city == null ? "" : city.trim());

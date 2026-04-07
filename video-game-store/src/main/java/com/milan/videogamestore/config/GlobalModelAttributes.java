@@ -2,7 +2,6 @@ package com.milan.videogamestore.config;
 
 import com.milan.videogamestore.model.cart.Cart;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 

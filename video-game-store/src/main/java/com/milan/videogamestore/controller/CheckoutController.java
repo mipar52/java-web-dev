@@ -11,7 +11,6 @@ import com.milan.videogamestore.repository.AppUserRepository;
 import com.milan.videogamestore.repository.GameRepository;
 import com.milan.videogamestore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -97,13 +95,6 @@ public class CheckoutController {
         model.addAttribute("total", total);
         return "order/details";
     }
-
-//    @GetMapping("/orders")
-//    public String myOrders(Authentication authentication, Model model) {
-//        List<Order> orders = orderRepository.findAllByUser_UsernameOrderByCreatedAtDesc(authentication.getName());
-//        model.addAttribute("orders", orders);
-//        return "orders/list";
-//    }
 
     private Summary buildSummary(Cart cart) {
         var items = new ArrayList<CartLine>();

@@ -11,6 +11,7 @@ import com.milan.videogamestore.repository.AppUserRepository;
 import com.milan.videogamestore.repository.GameRepository;
 import com.milan.videogamestore.repository.OrderRepository;
 import com.milan.videogamestore.service.payment.PaymentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -32,18 +34,29 @@ public class ExternalPaymentController {
     private final OrderRepository orderRepository;
     private final PaymentService paymentService;
 
-    @Value("${paypal.return-url}")
-    private String payPalReturnUrl;
-
-    @Value("${paypal.cancel-url}")
-    private String getPayPalCanelUrl;
-
     @Value("${paypal-currency:EUR}")
     private String payPalCurrency;
 
     @PostMapping("/checkout/paypal/start")
-    public String startPayPal(@ModelAttribute("cart") Cart cart, @ModelAttribute("form") CheckoutForm checkoutForm, Authentication authentication) {
+    public String startPayPal(
+            @ModelAttribute("cart") Cart cart,
+            @ModelAttribute("form") CheckoutForm checkoutForm,
+            Authentication authentication,
+            HttpServletRequest request) {
+
         if (cart.getQuantities().isEmpty()) return "redirect:/cart";
+
+        String returnUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath("/checkout/paypal/success")
+                .replaceQuery(null)
+                .build()
+                .toUriString();
+
+        String cancelUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath("/checkout/paypal/cancel")
+                .replaceQuery(null)
+                .build()
+                .toUriString();
 
         String username = authentication.getName();
         AppUser user = appUserRepository.findByUsernameWithRole(username).orElseThrow(() -> new IllegalStateException("Logged in user not found: " + username));
@@ -80,7 +93,7 @@ public class ExternalPaymentController {
 
         orderRepository.save(order);
 
-        var created = paymentService.createOrder(total, payPalCurrency, payPalReturnUrl, getPayPalCanelUrl);
+        var created = paymentService.createOrder(total, payPalCurrency, returnUrl, cancelUrl);
         order.setExternalPaymentId(created.id());
         orderRepository.save(order);
 

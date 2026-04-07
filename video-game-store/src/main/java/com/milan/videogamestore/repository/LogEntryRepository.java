@@ -1,6 +1,6 @@
 package com.milan.videogamestore.repository;
 
-import com.milan.videogamestore.model.logEntry.LogEntry;
+import com.milan.videogamestore.model.logentry.LogEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
