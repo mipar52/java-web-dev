@@ -154,11 +154,14 @@
       </div>
     </form>
     <form th:action="@{'/admin/games/' + ${game.id} + '/cover'}" method="post" enctype="multipart/form-data">
-      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-      <input class="form-control" type="file" name="cover" accept="image/*" required/>
-      <div class="d-flex justify-content-end mt-2">
-        <button class="btn ds-btn" type="submit">Upload cover</button>
+      <div style="margin-top: 20px">
+        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input class="form-control" type="file" name="cover" accept="image/*" required/>
+        <div class="d-flex justify-content-end mt-2">
+          <button class="btn ds-btn" type="submit">Upload cover</button>
+        </div>
       </div>
+
     </form>
   </div>
 </div>

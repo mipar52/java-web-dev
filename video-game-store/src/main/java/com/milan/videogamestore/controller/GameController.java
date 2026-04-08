@@ -27,7 +27,7 @@ public class GameController {
     public String listGames(
             @RequestParam(name = "genreId", required = false) List<Long> genreIds,
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "5") int size,
+            @RequestParam(name = "size", defaultValue = "6") int size,
             @RequestHeader(value = "HX-Request", required = false) String hxRequest,
             HttpServletRequest request,
             Model model
