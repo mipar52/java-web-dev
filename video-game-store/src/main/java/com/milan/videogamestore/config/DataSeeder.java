@@ -31,10 +31,6 @@ public class DataSeeder {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            if (gameRepository.count() > 0) {
-                return;
-            }
-
             UserRole adminRole = roleRepo.findByName("ADMIN")
                     .orElseGet(() -> roleRepo.save(new UserRole("ADMIN")));
 
@@ -119,16 +115,16 @@ public class DataSeeder {
             ps5 = consoleRepository.save(ps5);
 
             Console ps4 = new Console();
-            ps5.setName("PlayStation 4");
-            ps5 = consoleRepository.save(ps4);
+            ps4.setName("PlayStation 4");
+            ps4 = consoleRepository.save(ps4);
 
             Console xsx = new Console();
             xsx.setName("Xbox Series X|S");
             xsx = consoleRepository.save(xsx);
 
             Console xb360 = new Console();
-            xsx.setName("Xbox 360");
-            xsx = consoleRepository.save(xb360);
+            xb360.setName("Xbox 360");
+            xb360 = consoleRepository.save(xb360);
 
             Console switchConsole = new Console();
             switchConsole.setName("Nintendo Switch");
@@ -398,7 +394,7 @@ public class DataSeeder {
             g19.setWonGameOfTheYearAward(false);
             g19.setGameType(multi);
             g19.setGameGenres(Set.of(action, shooter));
-            g19.setConsoles(Set.of(pc, ps5, xsx, switchConsole));
+            g19.setConsoles(Set.of(pc, ps5, xsx, xb360, switchConsole));
             gameRepository.save(g19);
 
             Game g20 = new Game();
@@ -412,7 +408,7 @@ public class DataSeeder {
             g20.setWonGameOfTheYearAward(false);
             g20.setGameType(single);
             g20.setGameGenres(Set.of(action, shooter));
-            g20.setConsoles(Set.of(pc, ps5, ps4));
+            g20.setConsoles(Set.of(pc, ps5, ps4, xb360));
             gameRepository.save(g20);
         };
     }
